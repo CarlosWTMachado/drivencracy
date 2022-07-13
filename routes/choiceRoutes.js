@@ -1,10 +1,10 @@
 import express from 'express';
 import {PostChoice, GetPollChoices, PostChoiceVote} from '../controllers/choiceController.js';
-import {validaChoice, VerificaSeExistePostChoice, VerificaSeExisteGetPollChoices, VerificaSeExistePostChoiceVote} from '../middlewares/choiceMiddleware.js';
+import {validaPostChoice, VerificaPostChoice, VerificaGetPollChoices, VerificaPostChoiceVote} from '../middlewares/choiceMiddleware.js';
 
 const router = express.Router();
 
-router.get('/poll/:id/choice', VerificaSeExisteGetPollChoices, GetPollChoices);
-router.post('/choice', validaChoice, VerificaSeExistePostChoice, PostChoice);
-router.post('/choice/:id/vote', VerificaSeExistePostChoiceVote, PostChoiceVote);
+router.get('/poll/:id/choice', VerificaGetPollChoices, GetPollChoices);
+router.post('/choice', validaPostChoice, VerificaPostChoice, PostChoice);
+router.post('/choice/:id/vote', VerificaPostChoiceVote, PostChoiceVote);
 export default router;

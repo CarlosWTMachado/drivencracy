@@ -26,9 +26,8 @@ export async function PostPoll(req, res) {
 }
 
 export async function GetPollResults(req, res) {
-	const {id} = req.params;
+	const poll = res.locals.poll;
 	try {
-		const poll = await db.collection("polls").findOne({_id: new ObjectId(id)});
 		const choices = await db.collection("choices").find({pollId: poll._id}).toArray();
 		const votes = await Promise.all(
 			choices.map(async value => {

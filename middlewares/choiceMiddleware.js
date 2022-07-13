@@ -3,7 +3,7 @@ import db from '../db/db.js';
 import {ObjectId} from 'mongodb';
 import dayjs from 'dayjs';
 
-export async function validaChoice(req, res, next) {
+export async function validaPostChoice(req, res, next) {
 	const schema = joi.object({
 		title: joi.string().required(),
 		pollId: joi.string().required()
@@ -13,7 +13,7 @@ export async function validaChoice(req, res, next) {
 	next();
 }
 
-export async function VerificaSeExistePostChoice(req, res, next){
+export async function VerificaPostChoice(req, res, next){
 	try {
 		const poll = await db.collection("polls").findOne({_id: new ObjectId(req.body.pollId)});
 		if(!poll) return res.sendStatus(404);
@@ -22,24 +22,23 @@ export async function VerificaSeExistePostChoice(req, res, next){
 		if(choice) return res.sendStatus(409);
 
 		if(dayjs(poll.expireAt).isBefore(dayjs())) return res.sendStatus(403);
-
-		next();
 	} catch (error) {
 		return res.status(500).send(error);
 	}
+	next();
 }
 
-export async function VerificaSeExisteGetPollChoices(req, res, next){
+export async function VerificaGetPollChoices(req, res, next){
 	try {
 		const poll = await db.collection("polls").findOne({_id: new ObjectId(req.params.id)});
 		if(!poll) return res.sendStatus(404);
-		next();
 	} catch (error) {
 		return res.status(500).send(error);
 	}
+	next();
 }
 
-export async function VerificaSeExistePostChoiceVote(req, res, next){
+export async function VerificaPostChoiceVote(req, res, next){
 	try {
 		const choice = await db.collection("choices").findOne({_id: new ObjectId(req.params.id)});
 		if(!choice) return res.sendStatus(404);
