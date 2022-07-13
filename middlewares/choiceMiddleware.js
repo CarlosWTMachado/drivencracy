@@ -38,3 +38,17 @@ export async function VerificaSeExisteGetPollChoices(req, res, next){
 		return res.status(500).send(error);
 	}
 }
+
+export async function VerificaSeExistePostChoiceVote(req, res, next){
+	try {
+		const choice = await db.collection("choices").findOne({_id: new ObjectId(req.params.id)});
+		if(!choice) return res.sendStatus(404);
+
+		const poll = await db.collection("polls").findOne({_id: choice.pollId});
+
+		if(dayjs(poll.expireAt).isBefore(dayjs())) return res.sendStatus(403);
+		next();
+	} catch (error) {
+		return res.status(500).send(error);
+	}
+}

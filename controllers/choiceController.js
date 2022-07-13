@@ -25,3 +25,17 @@ export async function GetPollChoices(req, res){
 		return res.status(500).send(error);
 	}
 }
+
+export async function PostChoiceVote(req, res){
+	const {id} = req.params;
+	console.log(id)
+	try {
+		await db.collection("votes").insertOne({
+			createdAt: dayjs().format('YYYY-MM-DD HH:mm'),
+			choiceId: new ObjectId(id)
+		});
+		res.sendStatus(201);
+	} catch (error) {
+		return res.status(500).send(error);
+	}
+}
