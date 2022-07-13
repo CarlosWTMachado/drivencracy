@@ -20,3 +20,14 @@ export async function PostChoice(req, res) {
 		return res.status(500).send(error);
 	}
 }
+
+export async function GetPollChoices(req, res){
+	const {id} = req.params;
+	try {
+		const choices = await db.collection("choices").find({pollId: new ObjectId(id)}).toArray();
+		if(!choices) return res.sendStatus(404);
+		res.send(choices)
+	} catch (error) {
+		return res.status(500).send(error);
+	}
+}
