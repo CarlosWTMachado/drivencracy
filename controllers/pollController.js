@@ -1,6 +1,7 @@
 import db from '../db/db.js';
 import {ObjectId} from 'mongodb';
 import {v4 as uuid} from 'uuid';
+import dayjs from 'dayjs';
 
 export async function GetPoll(req, res) {
 	try {
@@ -16,7 +17,7 @@ export async function PostPoll(req, res) {
 	try {
 		await db.collection("polls").insertOne({
 			title: title,
-			expireAt: expireAt
+			expireAt: (expireAt) ? (expireAt) : (dayjs().add(30, 'day').format('YYYY-MM-DD HH:mm'))
 		});
 		res.sendStatus(201);
 	} catch (error) {
