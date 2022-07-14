@@ -40,3 +40,19 @@ export async function GetPollResults(req, res) {
 		return res.status(500).send(error);
 	}
 }
+
+export async function GetPollAllResults(req, res) {
+	const poll = res.locals.poll;
+	try {
+		const choices = await db.collection("choices").find({pollId: poll._id}).toArray();
+		const votes = await Promise.all(
+			choices.map(async value => {
+				const votes = await db.collection("votes").find({choiceId: value._id}).toArray();
+				return {title: value.title, votes: votes.length};
+			})
+		);
+		res.status(200).send({...poll, results: votes.sort(function(a, b){return b.votes - a.votes;})});
+	} catch (error) {
+		return res.status(500).send(error);
+	}
+}
